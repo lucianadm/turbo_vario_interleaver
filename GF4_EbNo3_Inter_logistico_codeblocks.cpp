@@ -61,7 +61,8 @@ switch(i)
       deltah = Interval/3600.;
       deltam = (Interval = Interval - deltah * 3600)/60.;
       deltas = Interval - deltam * 60;
-      sali <<"\n"<< " CORRIO HOY: "<< ctime(&tinicial)
+
+ <<"\n"<< " CORRIO HOY: "<< ctime(&tinicial)
           <<" TIEMPO TOTAL DE CALCULO: "<<deltah<<" hs. "<<deltam<<" ms. "
           <<deltas<<" segs.\n";
 
@@ -193,7 +194,7 @@ void qsort_lu (double* x, int n, int * sl)
     float maxi;
     for(int j=0;j<=n-1;j++)
     {
-        printf ("%d\n; ",j);
+      //  printf ("%d\n; ",j);
         u=u+1;
         maxi=x[0];
         sub[u]=0;
@@ -225,11 +226,12 @@ long idum3=(-13);
 //duracion();       //-cuenta cuanto tarda desde aca
 int Hasta=1;
 
-FILE *sali=fopen("GF4_pL4_2p0a3p5_CI2.txt","w"); //Open the output file
-FILE *sali2=fopen("interleaver_L4_CI2EbNo2p0a3p5.txt","w"); //Open the output file
-FILE *sali3=fopen("Deinterleaver_L4_CI2EbNo2p0a3p5.txt","w"); //Open the output file
-FILE *sal4=fopen("logistico.txt","w"); //Open the output file
-FILE *sal5=fopen("Inter.txt","w"); //Open the output file
+FILE *sali=fopen("GF4_2p0a3p5_logistico.txt","w"); //Open the output file
+fprintf(sali,"Errores    Pbe   EbNo");
+//FILE *sali2=fopen("interleaver_EbNo2p0a3p5.txt","w"); //Open the output file
+FILE *sali3=fopen("Deinterleaver_EbNo2p0a3p5.txt","w"); //Open the output file
+FILE *sal4=fopen("logistico_EbNo2p0a3p5.txt","w"); //Open the output file
+FILE *sal5=fopen("Inter_EbNo2p0a3p5.txt","w"); //Open the output file
 
 int N=400;     //Longitud de Palabra
 
@@ -253,15 +255,14 @@ for (int i = 0 ; i < N ; i++) fprintf (sal4,"%f\n", xlog[i]);
 
 qsort_lu (xlog, N, Inter);
 
-for (int i = 0 ; i < N ; i++) fprintf (sal5,"%d\n", Inter[i]);
+for (int i = 0 ; i < N ; i++) {
+        fprintf (sal5,"%d\n", Inter[i]);
+        Deinter[Inter[i]]=i;
+        fprintf(sali3," %f\n",Deinter[i]);  // sali3<<Deinter[i]<<endl;
+}
 
-for (int i=1;i<=N;i++ ) Deinter[Inter[i]]=i;
-
-for (int i=1;i<=N;i++ ) fprintf(sali3," %f\n",Deinter[i]);  // sali3<<Deinter[i]<<endl;
-
-float N2=N/(0.2*N3F); //CANTIDAD DE SALTOS=200  //<==De ACA SALE L!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+float N2=N/(20*N3F); //CANTIDAD DE SALTOS=200  //<==De ACA SALE L!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                //LONG. DE CADA SALTO=N/N2=2      //L=4 0.2; L=1 0.05;  L=2 0.1
-
 
 int N1=2; //numero de bits del campo GF
 //cout<<"Campo GF("<<pow(2,N1)<<")"<<endl;
@@ -339,7 +340,7 @@ free_ivector(q,1,N1);
 Tabla_elem_bin[tamM+1][1]=2;
 Tabla_elem_bin[tamM+1][2]=2;
 
-for(int g=1;g<=10;g++) {printf("%f %f \n",Tabla_elem_bin [g][1],Tabla_elem_bin [g][2]); }//cout<<Tabla_elem_bin [g][1]<<" "<<Tabla_elem_bin [g][2]<<endl;}
+for(int g=1;g<=10;g++) {printf("%d %d \n",Tabla_elem_bin [g][1],Tabla_elem_bin [g][2]); }//cout<<Tabla_elem_bin [g][1]<<" "<<Tabla_elem_bin [g][2]<<endl;}
 
 
                               //     16        16      3  200
@@ -374,9 +375,9 @@ int exp0,exp1,exp2;
 
 for (int p=1;p<=N2;p++){//------------------------------------saltos------------
 
-for(int ite=1;ite<=Hasta;ite++) ale=ran1(&idum2);
+//for(int ite=1;ite<=Hasta;ite++) ale=ran1(&idum2);
 
-Coef=floor(6*ale+1);  //SIN SALTOS pongo un valor fijo entre 1 y 6, ej. Coef=6
+Coef=6; //floor(6*ale+1);  //SIN SALTOS pongo un valor fijo entre 1 y 6, ej. Coef=6
 //<=======================elije los coeficientes optimos a usar
 
 exp0=Key_Coef[Coef][1];
@@ -437,7 +438,7 @@ for (int i=1; i<Nmas1; i++) {
 
 
 
-for (float EbNo=3.0;EbNo<=3.0;EbNo=EbNo+0.5){  //=================Este lazo recorre valores de Sigma=======================================
+for (float EbNo=2.0;EbNo<=3.5;EbNo=EbNo+0.5){  //=================Este lazo recorre valores de Sigma=======================================
 
 printf("EbNo: %f \n",EbNo);
 Sigma = pow(10,(-1*EbNo/20));        // Dispersión del Ruido
